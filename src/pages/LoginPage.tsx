@@ -14,7 +14,7 @@ export default function LoginPage() {
         formState: { errors },
     } = useForm<LoginFormValues>();
 
-    const loginMutation = useMutation({
+    const { mutate, isPending, isError } = useMutation({
         mutationFn: login,
         onSuccess: (data) => {
             localStorage.setItem('access_token', data.access_token);
@@ -23,7 +23,7 @@ export default function LoginPage() {
     });
 
     const onSubmit = (data: LoginFormValues) => {
-        loginMutation.mutate(data);
+        mutate(data);
     };
 
     return (
@@ -64,7 +64,7 @@ export default function LoginPage() {
                     </p>
                 )}
 
-                {loginMutation.isError && (
+                {isError && (
                     <p className="text-red-500 text-sm mb-2">
                         Invalid email or password
                     </p>
@@ -72,10 +72,10 @@ export default function LoginPage() {
 
                 <button
                     type="submit"
-                    disabled={loginMutation.isPending}
+                    disabled={isPending}
                     className="bg-blue-600 text-white w-full py-2 rounded disabled:opacity-50"
                 >
-                    {loginMutation.isPending ? 'Logging in...' : 'Login'}
+                    {isPending ? 'Logging in...' : 'Login'}
                 </button>
             </form>
         </div>
