@@ -7,6 +7,7 @@ import {
   getJobApplications,
   type JobApplication,
   type JobApplicationStatus,
+  type PaginatedJobApplications,
 } from "../api/jobApplications";
 import {
   createJobApplication,
@@ -50,10 +51,10 @@ export default function DashboardPage() {
   const {
     data: applicationsResponse,
     isLoading: isApplicationsLoading,
-  } = useQuery({
+  } = useQuery<PaginatedJobApplications>({
     queryKey: ["job-applications", page, limit, activeStatus],
     queryFn: () => getJobApplications(page, limit, activeStatus),
-    keepPreviousData: true,
+    placeholderData: (previous) => previous,
   });
 
   const { mutateAsync: createApplication } = useMutation({
