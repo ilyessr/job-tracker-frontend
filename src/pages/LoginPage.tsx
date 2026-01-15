@@ -52,10 +52,13 @@ export default function LoginPage() {
           <h1 className="mt-2 text-3xl font-semibold text-slate-900">
             Welcome back
           </h1>
-          <p className="mt-2 text-sm text-slate-500">
-            Track every application, every step, every win.
-          </p>
-        </div>
+        <p className="mt-2 text-sm text-slate-500">
+          Track every application, every step, every win.
+        </p>
+        <p className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+          Heads up: The server may take a few seconds to start if it hasn’t been used recently. Please wait before logging in.
+        </p>
+      </div>
 
         <form onSubmit={handleSubmit((data) => mutate(data))}>
           <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
