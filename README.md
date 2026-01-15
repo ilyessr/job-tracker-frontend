@@ -3,6 +3,8 @@
 Frontend for the Job Tracker app: login, protected dashboard, stats, and job applications management.  
 It connects to a production backend I built here: https://github.com/ilyessr/job-tracker-backend
 
+Live demo: https://ilyessr.github.io/job-tracker-frontend/
+
 ## Demo Account
 
 Use the demo credentials to explore the app:
