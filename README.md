@@ -3,7 +3,7 @@
 Frontend for the Job Tracker app: login, protected dashboard, stats, and job applications management.  
 It connects to a production backend I built here: https://github.com/ilyessr/job-tracker-backend
 
-Live demo: https://ilyessr.github.io/job-tracker-frontend/
+Live demo: https://ilyessr.github.io/job-tracker-frontend/login
 
 ## Demo Account
 
@@ -24,17 +24,20 @@ Use the demo credentials to explore the app:
 
 ## Setup
 
-1) Install dependencies:
+1. Install dependencies:
+
 ```
 npm install
 ```
 
-2) Create a `.env` file and set:
+2. Create a `.env` file and set:
+
 ```
 VITE_API_URL=http://localhost:3000
 ```
 
-3) Start the dev server:
+3. Start the dev server:
+
 ```
 npm run dev
 ```
