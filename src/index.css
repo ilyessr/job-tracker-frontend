@@ -25,3 +25,49 @@
     font-family: "Sora", ui-sans-serif, system-ui;
   }
 }
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center font-semibold transition hover:cursor-pointer;
+  }
+
+  .btn-pill {
+    @apply rounded-full;
+  }
+
+  .btn-rect {
+    @apply rounded-xl;
+  }
+
+  .btn-xs {
+    @apply px-3 py-1 text-xs;
+  }
+
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+
+  .btn-md {
+    @apply px-5 py-2 text-sm;
+  }
+
+  .btn-lg {
+    @apply px-4 py-3 text-sm;
+  }
+
+  .btn-block {
+    @apply w-full;
+  }
+
+  .btn-primary {
+    @apply bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60;
+  }
+
+  .btn-outline {
+    @apply border border-slate-200 bg-white text-slate-700 hover:border-slate-300;
+  }
+
+  .btn-ghost {
+    @apply text-slate-500 hover:text-slate-700;
+  }
+}

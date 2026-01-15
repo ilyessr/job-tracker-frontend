@@ -5,7 +5,11 @@ export type LoginFormValues = {
   password: string;
 };
 
-export async function login(data: LoginFormValues) {
-  const response = await api.post("/auth/login", data);
+export type LoginResponse = {
+  access_token: string;
+};
+
+export async function login(data: LoginFormValues): Promise<LoginResponse> {
+  const response = await api.post<LoginResponse>("/auth/login", data);
   return response.data;
 }
