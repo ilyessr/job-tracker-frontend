@@ -3,6 +3,7 @@ import api from "./client";
 export type StatsResponse = {
   byMonth: Array<{ month: string; count: number }>;
   byStatus: Record<string, number>;
+  totalApplications: number;
   interviewTotal: number;
   interviewByMonth: Array<{ month: string; count: number }>;
   interviewRate: number;

@@ -13,6 +13,7 @@ export type JobApplication = {
   link?: string | null;
   applicationDate: string;
   status: JobApplicationStatus;
+  hadInterview: boolean;
 };
 
 export type PaginatedJobApplications = {
@@ -29,9 +30,16 @@ export type CreateJobApplicationPayload = {
   link?: string;
   applicationDate: string;
   status: JobApplicationStatus;
+  hadInterview: boolean;
 };
 
 export type UpdateJobApplicationPayload = Partial<CreateJobApplicationPayload>;
+
+export type ExportJobApplicationsParams = {
+  from?: string;
+  to?: string;
+  status?: JobApplicationStatus;
+};
 
 export async function getJobApplications(
   page = 1,
@@ -64,4 +72,19 @@ export async function updateJobApplication(
 
 export async function deleteJobApplication(id: string): Promise<void> {
   await api.delete(`/job-applications/${id}`);
+}
+
+export async function exportJobApplicationsPdf(
+  params: ExportJobApplicationsParams,
+): Promise<{ blob: Blob; filename: string }> {
+  const response = await api.get("/job-applications/export/pdf", {
+    params,
+    responseType: "blob",
+  });
+
+  const contentDisposition = response.headers["content-disposition"] as string | undefined;
+  const filenameMatch = contentDisposition?.match(/filename=\"?([^\";]+)\"?/i);
+  const filename = filenameMatch?.[1] ?? "job-applications.pdf";
+
+  return { blob: response.data, filename };
 }

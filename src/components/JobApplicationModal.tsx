@@ -135,6 +135,22 @@ export default function JobApplicationModal({
             </select>
           </div>
 
+          <div className="flex items-center gap-3">
+            <input
+              id="hadInterview"
+              type="checkbox"
+              className="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900/20"
+              {...register("hadInterview")}
+              disabled={isSubmitting}
+            />
+            <label
+              htmlFor="hadInterview"
+              className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500"
+            >
+              Had interview
+            </label>
+          </div>
+
           <div className="flex flex-col-reverse items-stretch justify-end gap-3 md:col-span-2 md:flex-row md:items-center">
             <button
               type="button"

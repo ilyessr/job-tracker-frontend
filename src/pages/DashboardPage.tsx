@@ -8,6 +8,7 @@ import {
   type JobApplication,
   type JobApplicationStatus,
   type PaginatedJobApplications,
+  exportJobApplicationsPdf,
 } from "../api/jobApplications";
 import {
   createJobApplication,
@@ -21,6 +22,7 @@ import DashboardHeader from "../components/DashboardHeader";
 import DashboardStats from "../components/DashboardStats";
 import JobApplicationsSection from "../components/JobApplicationsSection";
 import JobApplicationModal from "../components/JobApplicationModal";
+import ExportPdfModal from "../components/ExportPdfModal";
 
 export default function DashboardPage() {
   const { data: user } = useCurrentUser();
@@ -33,6 +35,9 @@ export default function DashboardPage() {
   const [limit] = useState(10);
   const [activeStatus, setActiveStatus] = useState<JobApplicationStatus>("APPLIED");
   const [formErrorMessages, setFormErrorMessages] = useState<string[]>([]);
+  const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -42,6 +47,7 @@ export default function DashboardPage() {
     defaultValues: {
       status: "APPLIED",
       applicationDate: new Date().toISOString().slice(0, 10),
+      hadInterview: false,
     },
   });
   const { data: stats, isLoading: isStatsLoading } = useQuery({
@@ -100,6 +106,7 @@ export default function DashboardPage() {
       company: "",
       jobTitle: "",
       link: "",
+      hadInterview: false,
     });
     setEditingApplication(null);
     setIsFormOpen(false);
@@ -114,6 +121,7 @@ export default function DashboardPage() {
       company: "",
       jobTitle: "",
       link: "",
+      hadInterview: false,
     });
     setIsFormOpen(true);
   };
@@ -127,6 +135,7 @@ export default function DashboardPage() {
       link: application.link ?? "",
       applicationDate: application.applicationDate.slice(0, 10),
       status: application.status,
+      hadInterview: application.hadInterview ?? false,
     });
     setIsFormOpen(true);
   };
@@ -135,6 +144,39 @@ export default function DashboardPage() {
     setIsFormOpen(false);
     setEditingApplication(null);
     setFormErrorMessages([]);
+  };
+
+  const openExportModal = () => {
+    setExportError(null);
+    setIsExportOpen(true);
+  };
+
+  const closeExportModal = () => {
+    if (isExporting) {
+      return;
+    }
+    setIsExportOpen(false);
+  };
+
+  const handleExportPdf = async ({ from, to }: { from?: string; to?: string }) => {
+    setExportError(null);
+    setIsExporting(true);
+    try {
+      const { blob, filename } = await exportJobApplicationsPdf({ from, to });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+      setIsExportOpen(false);
+    } catch {
+      setExportError("Unable to export PDF. Please try again.");
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const applications = applicationsResponse?.items ?? [];
@@ -163,12 +205,21 @@ export default function DashboardPage() {
           onSubmit={handleSubmit(onSubmitApplication)}
         />
 
+        <ExportPdfModal
+          isOpen={isExportOpen}
+          isExporting={isExporting}
+          formError={exportError}
+          onClose={closeExportModal}
+          onExport={handleExportPdf}
+        />
+
         <DashboardStats stats={stats} isLoading={isStatsLoading} />
 
         <JobApplicationsSection
           applications={applications}
           isLoading={isApplicationsLoading}
           onCreate={openCreateModal}
+          onExport={openExportModal}
           onEdit={openEditModal}
           activeStatus={activeStatus}
           onStatusChange={(status) => {
@@ -177,7 +228,7 @@ export default function DashboardPage() {
           }}
           page={applicationsResponse?.page ?? page}
           totalPages={applicationsResponse?.totalPages ?? 1}
-          total={applicationsResponse?.total ?? applications.length}
+          total={stats?.totalApplications ?? 0}
           onPageChange={setPage}
         />
       </div>

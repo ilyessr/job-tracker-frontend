@@ -20,6 +20,7 @@ type JobApplicationsSectionProps = {
   applications?: JobApplication[];
   isLoading: boolean;
   onCreate: () => void;
+  onExport: () => void;
   onEdit: (application: JobApplication) => void;
   activeStatus: JobApplicationStatus;
   onStatusChange: (status: JobApplicationStatus) => void;
@@ -76,7 +77,7 @@ function SortableJobRow({
     <div
       ref={setNodeRef}
       style={style}
-      className={`grid cursor-grab grid-cols-1 gap-3 rounded-2xl border border-slate-100 bg-white px-4 py-4 shadow-sm active:cursor-grabbing md:grid-cols-[1.4fr_1.2fr_0.8fr_0.8fr_0.4fr] ${
+      className={`grid cursor-grab grid-cols-1 gap-3 rounded-2xl border border-slate-100 bg-white px-4 py-4 shadow-sm active:cursor-grabbing md:grid-cols-[1.4fr_1.2fr_0.8fr_0.8fr_0.6fr_0.4fr] ${
         isDragging ? "opacity-60" : ""
       }`}
       {...attributes}
@@ -108,6 +109,19 @@ function SortableJobRow({
           {application.status}
         </span>
       </div>
+      <div className="text-sm text-slate-700">
+        {application.hadInterview ? (
+          <span className="inline-flex items-center gap-2 text-emerald-700">
+            <span>✅</span>
+            <span>Interviewed</span>
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-2 text-rose-600">
+            <span>❌</span>
+            <span>No interviews</span>
+          </span>
+        )}
+      </div>
       <div className="flex items-center justify-end">
         <button
           type="button"
@@ -125,6 +139,7 @@ export default function JobApplicationsSection({
   applications,
   isLoading,
   onCreate,
+  onExport,
   onEdit,
   activeStatus,
   onStatusChange,
@@ -209,10 +224,13 @@ export default function JobApplicationsSection({
           <h2 className="text-lg font-semibold text-slate-900">Applications list</h2>
           <p className="text-sm text-slate-500">Review and keep your pipeline up to date.</p>
         </div>
-      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <p className="text-sm text-slate-500">{total} applications</p>
           <button type="button" onClick={onCreate} className="btn btn-pill btn-md btn-primary">
             New application
+          </button>
+          <button type="button" onClick={onExport} className="btn btn-pill btn-md btn-outline">
+            Export PDF
           </button>
         </div>
       </div>
